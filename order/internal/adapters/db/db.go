@@ -26,9 +26,9 @@ type Adapter struct {
 	db *gorm.DB
 }
 
-func (a Adapter) Get(id string) (domain.Order, error) {
+func (a Adapter) Get(id int64) (domain.Order, error) {
 	var orderEntity Order
-	res := a.db.First(&orderEntity, id)
+	res := a.db.Preload("OrderItems").First(&orderEntity, id)
 	var orderItems []domain.OrderItem
 	for _, orderItem := range orderEntity.OrderItems {
 		orderItems = append(orderItems, domain.OrderItem{
