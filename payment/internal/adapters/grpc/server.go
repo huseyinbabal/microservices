@@ -38,10 +38,10 @@ func (a Adapter) Run() {
 		reflection.Register(grpcServer)
 	}
 
+	log.Printf("starting payment service on port %d ...", a.port)
 	if err := grpcServer.Serve(listen); err != nil {
 		log.Fatalf("failed to serve grpc on port ")
 	}
-	log.Printf("payment service is running on port %d", a.port)
 }
 
 func (a Adapter) Stop() {

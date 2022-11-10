@@ -13,8 +13,9 @@ import (
 )
 
 type Adapter struct {
-	api  ports.APIPort
-	port int
+	api    ports.APIPort
+	port   int
+	server *grpc.Server
 	order.UnimplementedOrderServer
 }
 
@@ -31,6 +32,7 @@ func (a Adapter) Run() {
 	}
 
 	grpcServer := grpc.NewServer()
+	a.server = grpcServer
 	order.RegisterOrderServer(grpcServer, a)
 	if config.GetEnv() == "development" {
 		reflection.Register(grpcServer)
@@ -40,4 +42,8 @@ func (a Adapter) Run() {
 	if err := grpcServer.Serve(listen); err != nil {
 		log.Fatalf("failed to serve grpc on port %d", a.port)
 	}
+}
+
+func (a Adapter) Stop() {
+	a.server.Stop()
 }

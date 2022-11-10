@@ -8,7 +8,8 @@ spec:
   selector:
     app: order
   ports:
-    - port: 8080
+    - name: grpc
+      port: 8080
       protocol: TCP
       targetPort: 8080
 ---
@@ -35,7 +36,7 @@ spec:
           - name: APPLICATION_PORT
             value: "8080"
           - name: ENV
-            value: "development"
+            value: "prod"
           - name: DATA_SOURCE_URL
             value: "root:s3cr3t@tcp(mysql:3306)/orders?charset=utf8mb4&parseTime=True&loc=Local"
           - name: PAYMENT_SERVICE_URL
@@ -46,21 +47,29 @@ spec:
             value: "info"
           - name: GODEBUG
             value: "http2debug=2"
+        ports:
+          - containerPort: 8080
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: GRPC
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: selfsigned-issuer
   name: order
 spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: /Order
             pathType: Prefix
             backend:
               service:
                 name: order
                 port:
                   number: 8080
+  tls:
+    - hosts:
+        - ingress.local

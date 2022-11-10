@@ -8,6 +8,11 @@ spec:
   clusterIP: None
   selector:
     app: payment
+  ports:
+    - name: grpc
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,6 +37,30 @@ spec:
           - name: APPLICATION_PORT
             value : "8081"
           - name: ENV
-            value: "development"
+            value: "prod"
           - name: DATA_SOURCE_URL
             value : "root:s3cr3t@tcp(mysql:3306)/payments?charset=utf8mb4&parseTime=True&loc=Local"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: GRPC
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+  name: payment
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /Payment
+            pathType: Prefix
+            backend:
+              service:
+                name: payment
+                port:
+                  number: 8081
+  tls:
+    - hosts:
+        - ingress.local
