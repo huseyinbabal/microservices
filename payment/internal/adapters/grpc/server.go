@@ -5,6 +5,7 @@ import (
 	"github.com/huseyinbabal/microservices-proto/golang/payment"
 	"github.com/huseyinbabal/microservices/payment/config"
 	"github.com/huseyinbabal/microservices/payment/internal/ports"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
@@ -31,7 +32,9 @@ func (a Adapter) Run() {
 		log.Fatalf("failed to listen on port %d, error: %v", a.port, err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(otelgrpc.UnaryServerInterceptor()),
+	)
 	a.server = grpcServer
 	payment.RegisterPaymentServer(grpcServer, a)
 	if config.GetEnv() == "development" {

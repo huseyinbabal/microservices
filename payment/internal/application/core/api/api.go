@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"github.com/huseyinbabal/microservices/payment/internal/application/core/domain"
 	"github.com/huseyinbabal/microservices/payment/internal/ports"
 )
@@ -15,8 +16,8 @@ func NewApplication(db ports.DBPort) *Application {
 	}
 }
 
-func (a Application) Charge(payment domain.Payment) (domain.Payment, error) {
-	err := a.db.Save(&payment)
+func (a Application) Charge(ctx context.Context, payment domain.Payment) (domain.Payment, error) {
+	err := a.db.Save(ctx, &payment)
 	if err != nil {
 		return domain.Payment{}, err
 	}

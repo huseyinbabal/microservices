@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: payment
   labels:
-    app: payment
+    service: payment
 spec:
   clusterIP: None
   selector:
-    app: payment
+    service: payment
   ports:
     - name: grpc
       port: 8081
@@ -19,17 +19,21 @@ kind: Deployment
 metadata:
   name: payment
   labels:
-    app: payment
+    service: payment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: payment
+      service: payment
   template:
     metadata:
       labels:
-        app: payment
+        service: payment
     spec:
+      initContainers:
+      - name: mysql-check
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nslookup mysql; do echo waiting for mysql; sleep 10; done;']
       containers:
       - name: payment
         image: payment

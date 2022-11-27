@@ -1,8 +1,11 @@
 package ports
 
-import "github.com/huseyinbabal/microservices/payment/internal/application/core/domain"
+import (
+	"context"
+	"github.com/huseyinbabal/microservices/payment/internal/application/core/domain"
+)
 
 type DBPort interface {
-	Get(id string) (domain.Payment, error)
-	Save(payment *domain.Payment) error
+	Get(ctx context.Context, id string) (domain.Payment, error)
+	Save(ctx context.Context, payment *domain.Payment) error
 }

@@ -26,6 +26,18 @@ spec:
           volumeMounts:
             - name: mysql-initdb
               mountPath: /docker-entrypoint-initdb.d
+          livenessProbe:
+            exec:
+              command: [ "mysqladmin", "ping", "-ps3cr3t" ]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command: [ "mysql", "-h", "127.0.0.1", "-ps3cr3t", "-e", "SELECT 1" ]
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 1
       volumes:
         - name: mysql-initdb
           configMap:

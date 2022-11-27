@@ -9,9 +9,9 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/testcontainers/testcontainers-go v0.13.0
 	google.golang.org/genproto v0.0.0-20220401170504-314d38edb7de
-	google.golang.org/grpc v1.45.0
+	google.golang.org/grpc v1.50.1
 	gorm.io/driver/mysql v1.3.5
-	gorm.io/gorm v1.23.8
+	gorm.io/gorm v1.24.2
 )
 
 require (
@@ -25,6 +25,8 @@ require (
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v20.10.11+incompatible // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/go-logr/logr v1.2.3 // indirect
+	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
@@ -44,10 +46,18 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/stretchr/objx v0.4.0 // indirect
+	github.com/uptrace/opentelemetry-go-extra/otelgorm v0.1.17 // indirect
+	github.com/uptrace/opentelemetry-go-extra/otelsql v0.1.17 // indirect
 	go.opencensus.io v0.22.3 // indirect
+	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.36.4 // indirect
+	go.opentelemetry.io/otel v1.11.1 // indirect
+	go.opentelemetry.io/otel/exporters/jaeger v1.11.1 // indirect
+	go.opentelemetry.io/otel/metric v0.33.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.11.1 // indirect
+	go.opentelemetry.io/otel/trace v1.11.1 // indirect
 	golang.org/x/net v0.0.0-20220403103023-749bd193bc2b // indirect
-	golang.org/x/sys v0.0.0-20220405052023-b1e9470b6e64 // indirect
+	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/protobuf v1.28.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
