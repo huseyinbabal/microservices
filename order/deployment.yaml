@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: order
   labels:
-    app: order
+    service: order
 spec:
   selector:
-    app: order
+    service: order
   ports:
     - name: grpc
       port: 8080
@@ -18,17 +18,21 @@ kind: Deployment
 metadata:
   name: order
   labels:
-    app: order
+    service: order
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: order
+      service: order
   template:
     metadata:
       labels:
-        app: order
+        service: order
     spec:
+      initContainers:
+      - name: mysql-check
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nslookup mysql; do echo waiting for mysql; sleep 10; done;']
       containers:
       - name: order
         image: order
@@ -41,12 +45,6 @@ spec:
             value: "root:s3cr3t@tcp(mysql:3306)/orders?charset=utf8mb4&parseTime=True&loc=Local"
           - name: PAYMENT_SERVICE_URL
             value: "payment:8081"
-          - name: GRPC_GO_LOG_VERBOSITY_LEVEL
-            value: "99"
-          - name: GRPC_GO_LOG_SEVERITY_LEVEL
-            value: "info"
-          - name: GODEBUG
-            value: "http2debug=2"
         ports:
           - containerPort: 8080
 ---
@@ -73,3 +71,4 @@ spec:
   tls:
     - hosts:
         - ingress.local
+      secretName: order-tls

@@ -5,8 +5,9 @@ import (
 	"github.com/huseyinbabal/microservices-proto/golang/order"
 	"github.com/huseyinbabal/microservices/order/config"
 	"github.com/huseyinbabal/microservices/order/internal/ports"
+	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc/reflection"
-	"log"
 	"net"
 
 	"google.golang.org/grpc"
@@ -31,7 +32,9 @@ func (a Adapter) Run() {
 		log.Fatalf("failed to listen on port %d, error: %v", a.port, err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(otelgrpc.UnaryServerInterceptor()),
+	)
 	a.server = grpcServer
 	order.RegisterOrderServer(grpcServer, a)
 	if config.GetEnv() == "development" {

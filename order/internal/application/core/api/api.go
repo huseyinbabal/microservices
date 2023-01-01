@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"github.com/huseyinbabal/microservices/order/internal/application/core/domain"
 	"github.com/huseyinbabal/microservices/order/internal/ports"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
@@ -20,12 +21,12 @@ func NewApplication(db ports.DBPort, payment ports.PaymentPort) *Application {
 	}
 }
 
-func (a Application) PlaceOrder(order domain.Order) (domain.Order, error) {
-	err := a.db.Save(&order)
+func (a Application) PlaceOrder(ctx context.Context, order domain.Order) (domain.Order, error) {
+	err := a.db.Save(ctx, &order)
 	if err != nil {
 		return domain.Order{}, err
 	}
-	paymentErr := a.payment.Charge(&order)
+	paymentErr := a.payment.Charge(ctx, &order)
 	if paymentErr != nil {
 		st, _ := status.FromError(paymentErr)
 		fieldErr := &errdetails.BadRequest_FieldViolation{
@@ -41,6 +42,6 @@ func (a Application) PlaceOrder(order domain.Order) (domain.Order, error) {
 	return order, nil
 }
 
-func (a Application) GetOrder(id int64) (domain.Order, error) {
-	return a.db.Get(id)
+func (a Application) GetOrder(ctx context.Context, id int64) (domain.Order, error) {
+	return a.db.Get(ctx, id)
 }
