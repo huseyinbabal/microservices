@@ -5,9 +5,9 @@ import (
 	"github.com/huseyinbabal/microservices-proto/golang/order"
 	"github.com/huseyinbabal/microservices/order/config"
 	"github.com/huseyinbabal/microservices/order/internal/ports"
+	log "github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc/reflection"
-	"log"
 	"net"
 
 	"google.golang.org/grpc"
